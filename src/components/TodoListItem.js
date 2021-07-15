@@ -15,15 +15,16 @@ export default function TodoListItem({ task, onCrossClick, onBtnClick }) {
           onCrossClick(task);
         }}
       >
-        X
+        <i className="fas fa-trash-alt"></i>
       </button>
       <span className="TodoListItem--task-caption">{task.task}</span>
       <button
+        className="toggleTaskStatus"
         onClick={(e) => {
           onBtnClick(task);
         }}
       >
-        {task.status}
+        <i className="far fa-check-circle"></i>
       </button>
     </li>
   );
