@@ -7,16 +7,16 @@ import { v4 as uuidv4 } from "uuid"; // gives us uniq ids for our tasks
 // import logo from "./assets/logo512.png"
 
 function App() {
-  const TASK_STATUS_PENDING = "PENDING"; // == BACKLOG
-  const TASK_STATUS_ACTIVE = "ACTIVE";
+  const TASK_STATUS_PENDING = "PENDING"; // == TASKS BACKLOG
+  const TASK_STATUS_ACTIVE = "ACTIVE"; // == TASKS IN PROGRESS
   const TASK_STATUS_DONE = "DONE";
   const TASK_STATUS_TRASHED = "TRASHED";
-  const TASK_STATUSES = [
-    TASK_STATUS_PENDING,
-    TASK_STATUS_ACTIVE,
-    TASK_STATUS_DONE,
-    TASK_STATUS_TRASHED,
-  ];
+  // const TASK_STATUSES = [
+  //   TASK_STATUS_PENDING,
+  //   TASK_STATUS_ACTIVE,
+  //   TASK_STATUS_DONE,
+  //   TASK_STATUS_TRASHED,
+  // ];
 
   const seedTasks = [
     {
@@ -70,21 +70,61 @@ function App() {
       createdAt: +new Date(),
       inPlaceEditMode: false,
     },
+    {
+      id: uuidv4(),
+      task: "I'm on it!",
+      status: TASK_STATUS_ACTIVE,
+      priority: 1,
+      completedAt: null,
+      trashedAt: null,
+      createdAt: +new Date(),
+      inPlaceEditMode: false,
+    },
+    {
+      id: uuidv4(),
+      task: "Nearly there!!",
+      status: TASK_STATUS_ACTIVE,
+      priority: 2,
+      completedAt: null,
+      trashedAt: null,
+      createdAt: +new Date(),
+      inPlaceEditMode: false,
+    },
   ];
   const [tasks, setTasks] = useState(seedTasks);
-  // Render our pending, done and soft deleted tasks lists
-  const todoListItemsPending = renderTaskItems(TASK_STATUS_PENDING);
-  // TODO:
-  //const todoListItemsActive = renderTaskItems(TASK_STATUS_ACTIVE);
-  const todoListItemsDone = renderTaskItems(TASK_STATUS_DONE);
-  const todoListItemsTrashed = renderTaskItems(TASK_STATUS_TRASHED);
+  const [searchTerm, setSearchTerm] = useState("");
+  const pendingTasks = scopedTaks(TASK_STATUS_PENDING);
+  const activeTasks = scopedTaks(TASK_STATUS_ACTIVE);
+  const completedTasks = scopedTaks(TASK_STATUS_DONE);
+  const trashedTasks = scopedTaks(TASK_STATUS_TRASHED);
 
-  function renderTaskItems(status) {
+  // Render our pending, done and soft deleted tasks lists
+  const todoListItemsPending = renderTaskItems(pendingTasks);
+  // TODO:
+  const todoListItemsActive = renderTaskItems(activeTasks);
+  const todoListItemsDone = renderTaskItems(completedTasks);
+  const todoListItemsTrashed = renderTaskItems(trashedTasks);
+
+  // Scopes "tasks"-state using the provided status
+  // and applying a potential filter value
+  function scopedTaks(status) {
+    return tasks.filter((task) => {
+      if (searchTerm) {
+        return (
+          task.status === status && task.task.toLowerCase().includes(searchTerm)
+        );
+      } else {
+        return task.status === status;
+      }
+    });
+  }
+
+  function renderTaskItems(collection) {
     return (
-      tasks
-        .filter((task) => {
-          return task.status === status;
-        })
+      collection
+        // .filter((task) => {
+        //   return task.status === status;
+        // })
         // TODO: Ask Namir: Wtf?! ;-)
         .sort((a, b) => {
           return new Date(b.completedAt) - new Date(a.completedAt);
@@ -101,6 +141,7 @@ function App() {
               onTrashClick={handleTaskTrashClick}
               onBtnClick={handleTaskStatusToggleClick}
               onEditClick={handleTaskEditClick}
+              onSubmitUpdate={handleSubmitUpdate}
             />
           );
         })
@@ -121,6 +162,7 @@ function App() {
       })
     );
   }
+
   // Toggle the inLineEdit-boolean
   function handleTaskEditClick(currentTask) {
     console.log("handleTaskEditClick");
@@ -165,7 +207,29 @@ function App() {
     );
   }
 
-  function handleSubmit(event) {
+  // Handles task Update
+  function handleSubmitUpdate(currentTask, event) {
+    console.log("handleSubmitUpdate");
+    event.preventDefault();
+
+    const form = event.target;
+
+    setTasks(
+      tasks.map((task) => {
+        if (task.id === currentTask.id) {
+          task.task = form.taskInput.value || "Unspecified Task";
+          task.priority = form.taskPriority.value || 2;
+          task.inPlaceEditMode = false;
+        }
+
+        return task;
+      })
+    );
+  }
+
+  // Handles task Creation
+  function handleSubmitCreate(event) {
+    console.log("SUBMIT");
     event.preventDefault();
     const form = event.target;
 
@@ -185,49 +249,74 @@ function App() {
     ]);
   }
 
+  function handleLiveSearch(event) {
+    setSearchTerm(event.target.value.toLowerCase());
+  }
+
+  function ListHeader({ caption, count }) {
+    console.log("count: " + count);
+    return (
+      <li className="listHeader">
+        {count} {caption}
+      </li>
+    );
+  }
+
   return (
     <div className="App">
       <header>
         <h1>Todo App</h1>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmitCreate}>
           <input
             id="taskInput"
             type="text"
             placeholder="What needs to get done?!"
           />
 
-          <select name="taskPriority" id="taskPriority">
+          <select defaultValue="2" name="taskPriority" id="taskPriority">
             <option value="1">High Priority</option>
-            <option selected value="2">
-              Medium Priority
-            </option>
-            <option select value="3">
-              Low Priority
-            </option>
-            <option select value="4">
-              Priority?
-            </option>
+            <option value="2">Medium Priority</option>
+            <option value="3">Low Priority</option>
+            <option value="4">Priority?</option>
           </select>
 
           <button type="submit">Add</button>
         </form>
+        <input
+          id="tasksLiveSearch"
+          type="text"
+          placeholder="What are you looking for?"
+          onChange={handleLiveSearch}
+        />
       </header>
       <main>
         <div className="TasksTile TasksTile--pending">
           <ul>
-            <li className="listHeader">Pending Tasks</li>
+            <ListHeader
+              caption="Tasks in Backlog (max 10)"
+              count={pendingTasks.length}
+            />
             {todoListItemsPending}
+          </ul>
+        </div>
+        <div className="TasksTile TasksTile--pending">
+          <ul>
+            <ListHeader caption="Active Tasks" count={activeTasks.length} />
+            {todoListItemsActive}
           </ul>
         </div>
         <div className="TasksTile TasksTile--done">
           <ul>
-            <li className="listHeader">Completed Tasks</li>
+            <ListHeader
+              caption="Completed Tasks"
+              count={completedTasks.length}
+            />
             {todoListItemsDone}
           </ul>
         </div>
         <div className="TasksTile TasksTile--trashed">
           <ul>
-            <li className="listHeader">Trashed Tasks</li>
+            <ListHeader caption="Trashed Tasks" count={trashedTasks.length} />
             {todoListItemsTrashed}
           </ul>
         </div>

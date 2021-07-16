@@ -1,20 +1,35 @@
+const taskPriorityOptionsForSelect = [
+  {
+    label: "High Priority",
+    value: 1,
+  },
+  {
+    label: "Medium Priority",
+    value: 2,
+  },
+  {
+    label: "Low Priority",
+    value: 3,
+  },
+  {
+    label: "Priority?",
+    value: 4,
+  },
+];
+
 export default function TodoListItem({
   task,
   onTrashClick,
   onBtnClick,
   onEditClick,
+  onSubmitUpdate,
 }) {
-  if (task.inPlaceEditMode) {
-    console.log("IN PLACE EDIT MODE!");
-  } else {
-    console.log("REGULAR MODE");
-  }
-
   const argsObj = {
     task,
     onTrashClick,
     onBtnClick,
     onEditClick,
+    onSubmitUpdate,
   };
 
   return task.inPlaceEditMode
@@ -27,6 +42,7 @@ function TodoListItemPresentationMode({
   onTrashClick,
   onBtnClick,
   onEditClick,
+  onSubmitUpdate,
 }) {
   return (
     <li
@@ -77,6 +93,7 @@ function TodoListItemInPlaceEditMode({
   onTrashClick,
   onBtnClick,
   onEditClick,
+  onSubmitUpdate,
 }) {
   return (
     <li
@@ -88,38 +105,44 @@ function TodoListItemInPlaceEditMode({
         task.priority
       }
     >
-      <div className="TodoListItem--task-header">
-        <span>
-          <i class="fas fa-tasks"></i>
-        </span>
-        <div className="TodoListItem--task-caption">
-          <input name="task"></input>
+      <form
+        onSubmit={(e) => {
+          onSubmitUpdate(task, e);
+        }}
+      >
+        <div className="TodoListItem--task-header">
+          <span>
+            <i class="fas fa-tasks"></i>
+          </span>
+          <div className="TodoListItem--task-caption">
+            <input
+              type="text"
+              id="taskInput" // TODO: Should be unique!
+              class="taskInput"
+              name="taskInput"
+              defaultValue={task.task}
+              autofocus="autofocus"
+            ></input>
+          </div>
         </div>
-      </div>
-      <div className="TodoListItem--task-actions">
-        <div>
-          <select name="taskPriority" id="taskPriority">
-            <option value="1">High Priority</option>
-            <option selected value="2">
-              Medium Priority
-            </option>
-            <option select value="3">
-              Low Priority
-            </option>
-            <option select value="4">
-              Priority?
-            </option>
-          </select>
+        <div className="TodoListItem--task-actions">
+          <div>
+            <select
+              defaultValue={task.priority}
+              name="taskPriority"
+              id="taskPriority" // TODO: Should be unique!
+              class="taskPriority"
+            >
+              {taskPriorityOptionsForSelect.map((option) => {
+                return <option value={option.value}>{option.label}</option>;
+              })}
+            </select>
+          </div>
+          <button type="submit" className="toggleTaskStatus">
+            Save
+          </button>
         </div>
-        <button
-          className="toggleTaskStatus"
-          onClick={(e) => {
-            onBtnClick(task);
-          }}
-        >
-          <i className="far fa-check-circle"></i>
-        </button>
-      </div>
+      </form>
     </li>
   );
 }

@@ -69,7 +69,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: flex-end;
+  /* align-items: flex-end; */
+  align-items: stretch;
 
   padding: 1rem;
   background-color: green;
@@ -92,6 +93,26 @@
 }
 .App main div.TasksTile--pending ul li.listHeader {
 }
+
+/* TODO: Scope this to edit mode items only !*/
+.App main div.TasksTile ul li.TodoListItem .taskInput {
+  all: unset;
+  text-align: right;
+  background-color: rgb(245 245 220 / 40%);
+
+  border-radius: 6px;
+  padding: 0.25rem;
+
+  caret-color: white;
+}
+.App main div.TasksTile ul li.TodoListItem .taskPriority {
+  all: unset;
+  text-align: right;
+  background-color: rgb(245 245 220 / 40%);
+  border-radius: 6px;
+  padding: 0.25rem;
+}
+
 .App main div.TasksTile--pending ul li.TodoListItem.TodoListItem--priority-1 {
   background-color: #fd5252;
   border-color: darkred;
@@ -126,6 +147,7 @@
   margin-bottom: 0.5rem;
   width: 100%;
   justify-content: space-between;
+  align-items: center;
 }
 .App main div.TasksTile ul li .TodoListItem--task-caption {
   font-weight: bold;
@@ -137,6 +159,10 @@
 
 .App main div.TasksTile ul li .TodoListItem--task-actions {
   padding-right: 0.5rem;
+  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .App main div.TasksTile--pending ul li.TodoListItem {
