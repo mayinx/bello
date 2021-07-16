@@ -67,8 +67,10 @@
 
 .App main ul li {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
+
   padding: 1rem;
   background-color: green;
   border: 1px solid gray;
@@ -83,6 +85,7 @@
 }
 
 .App main div.TasksTile > ul > li.listHeader {
+  align-items: center;
   background: none;
   justify-content: center;
   margin-bottom: 1rem;
@@ -90,7 +93,7 @@
 .App main div.TasksTile--pending ul li.listHeader {
 }
 .App main div.TasksTile--pending ul li.TodoListItem.TodoListItem--priority-1 {
-  background-color: red;
+  background-color: #fd5252;
   border-color: darkred;
 }
 .App main div.TasksTile--pending ul li.TodoListItem.TodoListItem--priority-2 {
@@ -115,9 +118,27 @@
   min-height: 90vh;
 }
 
+.App main div.TasksTile ul li .TodoListItem--task-header {
+  display: flex;
+
+  padding: 0.5rem;
+  border-bottom: 1px solid black;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  justify-content: space-between;
+}
 .App main div.TasksTile ul li .TodoListItem--task-caption {
   font-weight: bold;
+  /* align-self: flex-start; */
+
+  /* width: 100%; */
+  /* text-align: start; */
 }
+
+.App main div.TasksTile ul li .TodoListItem--task-actions {
+  padding-right: 0.5rem;
+}
+
 .App main div.TasksTile--pending ul li.TodoListItem {
   background-color: red;
 }
@@ -135,7 +156,7 @@
   padding: 0.25em;
   /* color: darkolivegreen; */
   color: black;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   background-color: transparent;
   /* border-radius: 50%; */
   /* border: 1px solid gray; */

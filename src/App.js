@@ -3,6 +3,9 @@ import { useState } from "react";
 import TodoListItem from "./components/TodoListItem.js";
 import { v4 as uuidv4 } from "uuid"; // gives us uniq ids for our tasks
 
+// importing images
+// import logo from "./assets/logo512.png"
+
 function App() {
   const TASK_STATUS_PENDING = "PENDING"; // == BACKLOG
   const TASK_STATUS_ACTIVE = "ACTIVE";
@@ -24,6 +27,7 @@ function App() {
       completedAt: null,
       trashedAt: null,
       activatedAt: null,
+      inPlaceEditMode: false,
     },
     {
       id: uuidv4(),
@@ -33,6 +37,7 @@ function App() {
       completedAt: null,
       trashedAt: null,
       activatedAt: null,
+      inPlaceEditMode: false,
     },
     {
       id: uuidv4(),
@@ -42,6 +47,7 @@ function App() {
       completedAt: null,
       trashedAt: null,
       activatedAt: null,
+      inPlaceEditMode: false,
     },
     {
       id: uuidv4(),
@@ -52,6 +58,7 @@ function App() {
       trashedAt: null,
       activatedAt: null,
       createdAt: +new Date(),
+      inPlaceEditMode: false,
     },
     {
       id: uuidv4(),
@@ -61,12 +68,14 @@ function App() {
       completedAt: null,
       trashedAt: null,
       createdAt: +new Date(),
+      inPlaceEditMode: false,
     },
   ];
   const [tasks, setTasks] = useState(seedTasks);
   // Render our pending, done and soft deleted tasks lists
   const todoListItemsPending = renderTaskItems(TASK_STATUS_PENDING);
-  const todoListItemsActive = renderTaskItems(TASK_STATUS_ACTIVE);
+  // TODO:
+  //const todoListItemsActive = renderTaskItems(TASK_STATUS_ACTIVE);
   const todoListItemsDone = renderTaskItems(TASK_STATUS_DONE);
   const todoListItemsTrashed = renderTaskItems(TASK_STATUS_TRASHED);
 
@@ -89,8 +98,9 @@ function App() {
             <TodoListItem
               task={e}
               key={i}
-              onCrossClick={handleTaskTrashClick}
+              onTrashClick={handleTaskTrashClick}
               onBtnClick={handleTaskStatusToggleClick}
+              onEditClick={handleTaskEditClick}
             />
           );
         })
@@ -111,8 +121,22 @@ function App() {
       })
     );
   }
+  // Toggle the inLineEdit-boolean
+  function handleTaskEditClick(currentTask) {
+    console.log("handleTaskEditClick");
+    setTasks(
+      tasks.map((task) => {
+        if (task.id === currentTask.id) {
+          task.inPlaceEditMode = true;
+        }
+
+        return task;
+      })
+    );
+  }
 
   // TODO:
+  // Only for already trashed task:
   // Remove the current task for good
   // function handleTaskDeleteClick(currentTask) {
   //      setTasks(
@@ -124,6 +148,7 @@ function App() {
 
   // toggle the current tasks's status
   function handleTaskStatusToggleClick(currentTask) {
+    console.log("handleTaskStatusToggleClick");
     setTasks(
       tasks.map((task) => {
         if (task.id === currentTask.id) {
@@ -148,11 +173,14 @@ function App() {
       ...tasks,
       {
         id: uuidv4(),
-        task: form.taskInput.value,
-        priority: form.taskPriority.value,
+        task: form.taskInput.value || "Unspecified Task",
+        priority: form.taskPriority.value || 2,
         status: TASK_STATUS_PENDING,
-        completedAt: null,
         createdAt: +new Date(),
+        completedAt: null,
+        trashedAt: null,
+        activatedAt: null,
+        inPlaceEditMode: false,
       },
     ]);
   }
