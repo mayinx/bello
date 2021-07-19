@@ -317,6 +317,14 @@ function App() {
   function handleSubmitCreate(event) {
     console.log("SUBMIT");
     event.preventDefault();
+
+    if (pendingTasks.length >= tasksBacklogLimit) {
+      window.alert(
+        "BACKLOG LIMIT REACHED\n\nCan't backlog this task since the max number of backlogged tasks is already reached. Just finish one or more of your backlogged Tasks before you move this task to you backlog!"
+      );
+      return;
+    }
+
     const form = event.target;
 
     setTasks([
