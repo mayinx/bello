@@ -1,3 +1,5 @@
+/* TODO: Organize this ;-) */
+
 *,
 ::before,
 ::after {
@@ -7,37 +9,101 @@
 }
 
 .App {
-  text-align: center;
-}
-
-.App {
-  font-family: sans-serif;
-  text-align: center;
-}
-
-.App {
-  display: grid;
-
+  /* display: grid;
+  grid-template-rows: 11fr auto;
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr min-content;
   grid-template-areas:
     "header"
-    "main";
+    "main"; */
+
+  /* grid-gap: 1rem; */
+
   justify-items: stretch;
   align-items: stretch;
+  text-align: center;
+  font-family: sans-serif;
+  text-align: center;
+
+  height: 100%;
 }
 
 .App header {
-  grid-area: header;
-  background-color: gray;
-
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
+  align-content: center;
+
+  width: 100%;
+  padding: 1.5rem;
+  background-color: #5b9d9d;
+}
+
+.App header form {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  margin-bottom: 1rem;
+}
+
+.App header h1 {
+  color: aliceblue;
+  letter-spacing: 2px;
+  order: -1;
+  margin-bottom: 1rem;
+}
+.App header h1 i {
+  margin-right: 0.5rem;
+}
+
+.App header input,
+.App header select {
+  all: unset;
+  margin-right: 0.5rem;
+  /* text-align: right; */
+  background-color: rgb(245 245 220 / 40%);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  caret-color: white;
+  color: white;
+  font-weight: bold;
+  box-shadow: rgb(50 50 93 / 25%) 0px 13px 27px -5px,
+    rgb(0 0 0 / 30%) 0px 8px 16px -8px;
+  letter-spacing: 1px;
+}
+
+.App header select {
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: normal;
+}
+.App header select option {
+  color: black;
+}
+option[default] {
+  /* display: none; */
+  /* color: white; */
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: normal;
+}
+
+.App header input::placeholder {
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: bold;
+  /* font-size: 1.5em; */
+}
+
+.App header button {
+  all: unset;
+  padding: 0.5rem 0.75rem;
+  background-color: aquamarine;
+  background-color: #65f4d0;
+  border-radius: 10px;
+  box-shadow: rgb(50 50 93 / 25%) 0px 13px 27px -5px,
+    rgb(0 0 0 / 30%) 0px 8px 16px -8px;
 }
 
 .App main {
-  grid-area: main;
+  /* grid-area: main; */
   background-color: whitesmoke;
   overflow: auto;
   padding: 1rem;
@@ -46,23 +112,36 @@
   display: flex;
   align-items: flex-start;
 
-  justify-content: space-evenly;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.App main div.TasksTile {
+  align-self: stretch;
+  width: 24%;
+
+  min-height: 85vh;
+  /* margin-right: 1rem; */
+  /* min-width: 240px; */
+  min-width: 350px;
+
+  box-shadow: rgb(50 50 93 / 25%) 0px 13px 27px -5px,
+    rgb(0 0 0 / 30%) 0px 8px 16px -8px;
+  border-radius: 10px;
+  background-color: #fff;
 }
 
 .App main ul {
   list-style-type: none;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-start;
   padding: 1rem;
 
-  box-shadow: rgb(50 50 93 / 25%) 0px 13px 27px -5px,
-    rgb(0 0 0 / 30%) 0px 8px 16px -8px;
-  border-radius: 10px;
-  background-color: #fff;
-  min-width: 100%;
-  min-height: 100%;
+  /* min-width: 100%; */
+  /* min-height: 100%; */
+  /* min-width: 250px; */
 }
 
 .App main ul li {
@@ -75,14 +154,27 @@
   padding: 1rem;
   background-color: green;
   border: 1px solid gray;
-  width: 100%;
+
   margin: 0.5rem;
 
   box-shadow: rgb(50 50 93 / 25%) 0px 13px 27px -5px,
     rgb(0 0 0 / 30%) 0px 8px 16px -8px;
   border-radius: 10px;
-  width: 20rem;
+
   border: 2px solid gray;
+
+  /* min-width: 160px; */
+}
+
+.App main div.TasksTile ul li .TodoListItem--task-header {
+  display: flex;
+
+  padding: 0.5rem;
+  border-bottom: 1px solid black;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .App main div.TasksTile > ul > li.listHeader {
@@ -90,9 +182,12 @@
   background: none;
   justify-content: center;
   margin-bottom: 1rem;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 1.25rem;
 }
-.App main div.TasksTile--pending ul li.listHeader {
-}
+/* .App main div.TasksTile--pending ul li.listHeader {
+} */
 
 /* TODO: Scope this to edit mode items only !*/
 .App main div.TasksTile ul li.TodoListItem .taskInput {
@@ -113,42 +208,29 @@
   padding: 0.25rem;
 }
 
-.App main div.TasksTile--pending ul li.TodoListItem.TodoListItem--priority-1 {
+.App main div.TasksTile--pending ul li.TodoListItem.TodoListItem--priority-1,
+.App main div.TasksTile--active ul li.TodoListItem.TodoListItem--priority-1 {
   background-color: #fd5252;
   border-color: darkred;
 }
-.App main div.TasksTile--pending ul li.TodoListItem.TodoListItem--priority-2 {
+.App main div.TasksTile--pending ul li.TodoListItem.TodoListItem--priority-2,
+.App main div.TasksTile--active ul li.TodoListItem.TodoListItem--priority-2 {
   background-color: orange;
-  border-color: red;
+  border-color: #b87333;
 }
-.App main div.TasksTile--pending ul li.TodoListItem.TodoListItem--priority-3 {
+.App main div.TasksTile--pending ul li.TodoListItem.TodoListItem--priority-3,
+.App main div.TasksTile--active ul li.TodoListItem.TodoListItem--priority-3 {
   background-color: #ffdc7d;
   border-color: orange;
 }
-.App main div.TasksTile--pending ul li.TodoListItem.TodoListItem--priority-4 {
+.App main div.TasksTile--pending ul li.TodoListItem.TodoListItem--priority-4,
+.App main div.TasksTile--active ul li.TodoListItem.TodoListItem--priority-4 {
   /* background-color: yellowgreen; */
   /* background-color: #00c4a7; */
   background-color: #00d1b2;
   border-color: green;
 }
 
-.App main div.TasksTile {
-  align-self: stretch;
-  width: 45%;
-  display: flex;
-  min-height: 90vh;
-}
-
-.App main div.TasksTile ul li .TodoListItem--task-header {
-  display: flex;
-
-  padding: 0.5rem;
-  border-bottom: 1px solid black;
-  margin-bottom: 0.5rem;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-}
 .App main div.TasksTile ul li .TodoListItem--task-caption {
   font-weight: bold;
   /* align-self: flex-start; */
@@ -173,8 +255,18 @@
   background-color: lightslategray;
   border-color: #525e6a;
 
+  background-color: #5f9ea091;
+  border-color: #097969;
+}
+
+/* TODO: rename to "archived" */
+.App main div.TasksTile--trashed ul li.TodoListItem {
+  /* background-color: gray; */
+  /* background-color: lightslategray;
+  border-color: #525e6a; */
+
   background-color: lightgray;
-  border-color: #c5c5c5;
+  border-color: #899499;
 }
 
 .App main div.TasksTile ul li.TodoListItem button {
@@ -200,20 +292,6 @@
   content: "\f058";
 }
 
-.App main div.TasksTile--pending ul li.TodoListItem button:hover i:before {
-  color: white;
-}
-.App
-  main
-  div.TasksTile--done
-  ul
-  li.TodoListItem
-  button.toggleTaskStatus
-  i:before {
-  font-family: "Font Awesome 5 Free";
-  font-weight: 900;
-  content: "\f0e2";
-}
-.App main div.TasksTile--done ul li.TodoListItem button:hover i:before {
+.App main div.TasksTile ul li.TodoListItem button:hover i:before {
   color: white;
 }
