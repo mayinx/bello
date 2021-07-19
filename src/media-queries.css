@@ -35,7 +35,7 @@
 }
 
 @media all and (min-width: 900px) {
-  .App main div.TasksTile > ul > li.listHeader {
+  .App main div.TasksTile > ul > li.TodoListHeader {
     flex-direction: row;
   }
 

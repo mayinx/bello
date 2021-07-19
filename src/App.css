@@ -177,7 +177,7 @@ option[default] {
   align-items: center;
 }
 
-.App main div.TasksTile > ul > li.listHeader {
+.App main div.TasksTile > ul > li.TodoListHeader {
   align-items: center;
   background: none;
   justify-content: center;
@@ -186,7 +186,7 @@ option[default] {
   justify-content: space-between;
   font-size: 1.25rem;
 }
-/* .App main div.TasksTile--pending ul li.listHeader {
+/* .App main div.TasksTile--pending ul li.TodoListHeader {
 } */
 
 /* TODO: Scope this to edit mode items only !*/

@@ -2,12 +2,47 @@ import "./App.css";
 import "./media-queries.css";
 import { useState } from "react";
 import TodoListItem from "./components/TodoListItem.js";
+import TodoListHeader from "./components/TodoListHeader.js";
+// external libraries
 import { v4 as uuidv4 } from "uuid"; // gives us uniq ids for our tasks
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // importing images
 // import logo from "./assets/logo512.png"
 
 function App() {
+  const notifyTaskCreated = () =>
+    toast.success(
+      <div>
+        <h3>Task successfully created</h3>
+        <div>You task was successfully created and added to your backlog.</div>
+      </div>
+    );
+
+  const notifyActiveTasksLimitReached = () =>
+    toast.error(
+      <div>
+        <h3>Active-tasks-limit reached!</h3>
+        <div>
+          Can't activate this task since the max number of active tasks is
+          already reached. Just finish one or more of your active tasks before
+          you start a new one!
+        </div>
+      </div>
+    );
+  const notifyTasksBacklogLimitReached = () =>
+    toast.error(
+      <div>
+        <h3>Backlog-limit reached!</h3>
+        <div>
+          Can't backlog this task since the max number of backlogged tasks is
+          already reached. Just finish one or more of your backlogged Tasks
+          before you move this task to you backlog!"
+        </div>
+      </div>
+    );
+
   const TASK_STATUS_PENDING = "PENDING"; // == TASKS BACKLOG
   const TASK_STATUS_ACTIVE = "ACTIVE"; // == TASKS IN PROGRESS
   const TASK_STATUS_DONE = "DONE";
@@ -267,16 +302,12 @@ function App() {
         if (task.id === currentTask.id) {
           if (task.status === TASK_STATUS_PENDING) {
             if (activeTasks.length >= activeTasksLimit) {
-              window.alert(
-                "ACTIVE TASKS LIMIT REACHED\n\nCan't activate this task since the max number of active tasks is already reached. Just finish one or more of your active tasks before you start a new one!"
-              );
+              notifyActiveTasksLimitReached();
               return task;
             }
           } else if (task.status === TASK_STATUS_ACTIVE) {
             if (pendingTasks.length >= tasksBacklogLimit) {
-              window.alert(
-                "BACKLOG LIMIT REACHED\n\nCan't backlog this task since the max number of backlogged tasks is already reached. Just finish one or more of your backlogged Tasks before you move this task to you backlog!"
-              );
+              notifyTasksBacklogLimitReached();
               return task;
             }
           }
@@ -319,9 +350,7 @@ function App() {
     event.preventDefault();
 
     if (pendingTasks.length >= tasksBacklogLimit) {
-      window.alert(
-        "BACKLOG LIMIT REACHED\n\nCan't backlog this task since the max number of backlogged tasks is already reached. Just finish one or more of your backlogged Tasks before you move this task to you backlog!"
-      );
+      notifyTasksBacklogLimitReached();
       return;
     }
 
@@ -341,25 +370,12 @@ function App() {
         inPlaceEditMode: false,
       },
     ]);
+
+    notifyTaskCreated();
   }
 
   function handleLiveSearch(event) {
     setSearchTerm(event.target.value.toLowerCase());
-  }
-
-  function ListHeader({ caption, iconClass, count }) {
-    // console.log("count: " + count);
-    return (
-      <li className="listHeader">
-        <span>
-          <i className={iconClass}></i>
-        </span>
-        <span>
-          <strong>{caption}</strong>
-        </span>
-        <span>({count})</span>
-      </li>
-    );
   }
 
   return (
@@ -398,7 +414,7 @@ function App() {
       <main>
         <div className="TasksTile TasksTile--pending">
           <ul>
-            <ListHeader
+            <TodoListHeader
               caption="Tasks-Backlog"
               iconClass="fas fa-clipboard-list"
               count={`${pendingTasks.length} / ${tasksBacklogLimit}`}
@@ -408,7 +424,7 @@ function App() {
         </div>
         <div className="TasksTile TasksTile--active">
           <ul>
-            <ListHeader
+            <TodoListHeader
               caption="Active Tasks"
               iconClass="fas fa-plane-departure"
               count={`${activeTasks.length} / ${activeTasksLimit}`}
@@ -418,7 +434,7 @@ function App() {
         </div>
         <div className="TasksTile TasksTile--done">
           <ul>
-            <ListHeader
+            <TodoListHeader
               caption="Completed Tasks"
               iconClass="far fa-check-circle"
               count={completedTasks.length}
@@ -428,7 +444,7 @@ function App() {
         </div>
         <div className="TasksTile TasksTile--trashed">
           <ul>
-            <ListHeader
+            <TodoListHeader
               caption="Archived Tasks"
               iconClass="fas fa-trash-alt"
               count={trashedTasks.length}
@@ -437,6 +453,7 @@ function App() {
           </ul>
         </div>
       </main>
+      <ToastContainer />
     </div>
   );
 }
