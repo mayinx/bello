@@ -109,7 +109,7 @@ function TodoListItemInPlaceEditMode(props) {
 // }
 
 function TodoListItemActions(props) {
-  // TODO:Ask Namir: That didn't work for some reason?!:
+  // TODO: Ask Namir: That didn't work for some reason?!:
   //const TagName = "TodoListItemActions" + ItemActionsStatusAppendix(props.task);
   const components = {
     PENDING: TodoListItemActionsPending,

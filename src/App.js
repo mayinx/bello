@@ -12,11 +12,37 @@ import "react-toastify/dist/ReactToastify.css";
 // import logo from "./assets/logo512.png"
 
 function App() {
+  /*
+  experiments => useEffect
+  */
+
   const notifyTaskCreated = () =>
     toast.success(
       <div>
         <h3>Task successfully created</h3>
         <div>You task was successfully created and added to your backlog.</div>
+      </div>
+    );
+  const notifyTaskCompleted = () =>
+    toast.success(
+      <div>
+        <h3>Task completed</h3>
+        <div>
+          You task was successfully marked as completed and moved to the
+          appropriate list. You can watch it there fo a while... and... be just
+          proud with your recent accomplishments! Ah- that feels good, doesn't
+          it?! Annother BS of your chest, sigh... Keep finishing tasks!
+        </div>
+      </div>
+    );
+  const notifyTaskReopened = () =>
+    toast.success(
+      <div>
+        <h3>Task reopened</h3>
+        <div>
+          You task was successfully reopened and moved to the tasks-backlog
+          again ...
+        </div>
       </div>
     );
 
@@ -286,6 +312,7 @@ function App() {
           }
           task.completedAt =
             task.status === TASK_STATUS_DONE ? +new Date() : null;
+          task.completed ? notifyTaskCompleted() : notifyTaskReopened();
         }
 
         return task;
