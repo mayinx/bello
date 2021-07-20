@@ -102,6 +102,13 @@ option[default] {
     rgb(0 0 0 / 30%) 0px 8px 16px -8px;
 }
 
+.App header .userScoreWrapper {
+  color: white;
+  font-size: 2rem;
+}
+.App header .userScoreWrapper i {
+  margin-right: 0.5rem;
+}
 .App main {
   /* grid-area: main; */
   background-color: whitesmoke;
@@ -260,7 +267,7 @@ option[default] {
 }
 
 /* TODO: rename to "archived" */
-.App main div.TasksTile--trashed ul li.TodoListItem {
+.App main div.TasksTile--archived ul li.TodoListItem {
   /* background-color: gray; */
   /* background-color: lightslategray;
   border-color: #525e6a; */

@@ -115,7 +115,7 @@ function TodoListItemActions(props) {
     PENDING: TodoListItemActionsPending,
     ACTIVE: TodoListItemActionsActive,
     DONE: TodoListItemActionsDone,
-    TRASHED: TodoListItemActionsTrashed,
+    ARCHIVED: TodoListItemActionsArchived,
   };
 
   const TagName = components[props.task.status];
@@ -127,10 +127,10 @@ function TodoListItemActionsPending(props) {
     <>
       <button
         onClick={(e) => {
-          props.onTrashClick(props.task);
+          props.onArchiveClick(props.task);
         }}
       >
-        <i className="fas fa-trash-alt"></i>
+        <i className="fas fa-box"></i>
       </button>
       <button
         onClick={(e) => {
@@ -163,10 +163,10 @@ function TodoListItemActionsActive(props) {
     <>
       <button
         onClick={(e) => {
-          props.onTrashClick(props.task);
+          props.onArchiveClick(props.task);
         }}
       >
-        <i className="fas fa-trash-alt"></i>
+        <i className="fas fa-box"></i>
       </button>
       <button
         onClick={(e) => {
@@ -199,10 +199,10 @@ function TodoListItemActionsDone(props) {
     <>
       <button
         onClick={(e) => {
-          props.onTrashClick(props.task);
+          props.onArchiveClick(props.task);
         }}
       >
-        <i className="fas fa-trash-alt"></i>
+        <i className="fas fa-box"></i>
       </button>
       <button
         onClick={(e) => {
@@ -217,14 +217,13 @@ function TodoListItemActionsDone(props) {
           props.onToggleCompletedClick(props.task);
         }}
       >
-        {/* <i className="far fa-check-circle"></i> */}
         <i className="fas fa-undo"></i>
       </button>
     </>
   );
 }
 
-function TodoListItemActionsTrashed(props) {
+function TodoListItemActionsArchived(props) {
   return (
     <>
       <button
@@ -236,15 +235,15 @@ function TodoListItemActionsTrashed(props) {
       </button>
       <button
         onClick={(e) => {
-          props.onUntrashClick(props.task);
+          props.onDearchiveClick(props.task);
         }}
       >
-        <i className="fas fa-trash-restore-alt"></i>
+        <i className="fas fa-box-open"></i>
       </button>
 
       <button
         onClick={(e) => {
-          props.onTrashClick(props.task);
+          props.onArchiveClick(props.task);
         }}
       >
         <i className="fas fa-times-circle"></i>

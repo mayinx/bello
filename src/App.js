@@ -1,6 +1,6 @@
 import "./App.css";
 import "./media-queries.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TodoListItem from "./components/TodoListItem.js";
 import TodoListHeader from "./components/TodoListHeader.js";
 // external libraries
@@ -12,10 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 // import logo from "./assets/logo512.png"
 
 function App() {
-  /*
-  experiments => useEffect
-  */
-
+  /* TODO: Refactor this notification BS */
   const notifyTaskCreated = () =>
     toast.success(
       <div>
@@ -45,6 +42,95 @@ function App() {
         </div>
       </div>
     );
+  const notifyTaskArchived = () =>
+    toast.success(
+      <div>
+        <h3>Task successfully archived</h3>
+        <div>
+          You task was successfully archived and moved to the corresponding
+          list. You can leave it there for a while and admire it or whatever
+          turns you on. And IF you finally decide to let go, you can always
+          delete archived tasks for good.
+        </div>
+      </div>
+    );
+  const notifyTaskDeleted = () =>
+    toast.success(
+      <div>
+        <h3>Task successfully deleted</h3>
+        <div>
+          Now it's done: Your task is gone -but don't you cry, young Padawan:
+          There's allways a new one!
+        </div>
+      </div>
+    );
+
+  const notifyTaskActivated = () =>
+    toast.success(
+      <div>
+        <h3>Task successfully activated</h3>
+        <div>
+          Now we have deal (Bello and you that is): Your task was successfully
+          activated and has now the sate 'in progress' => So get to it! Wuff!
+        </div>
+      </div>
+    );
+
+  const notifyTaskReBacklogged = () =>
+    toast.success(
+      <div>
+        <h3>Task successfully backlogged</h3>
+        <div>
+          Ohh keeyyy: You wanted to chicken out by moving your task to the
+          backlog again. Bello doesn't like that - once the bone is thrown, you
+          gotta ... fetch it? ... chew it? ... lick it clean? Doesn't matter =>
+          You get the picture! Wuff!
+        </div>
+      </div>
+    );
+
+  const notifyTaskDeArchived = () =>
+    toast.success(
+      <div>
+        <h3>Task successfully dearchived</h3>
+        <div>
+          Your task was successfully dearchived an dmove tothe backlog again
+        </div>
+      </div>
+    );
+
+  const notifyScoredUp = () =>
+    toast.success(
+      <div>
+        <h3>
+          <i class="fas fa-trophy"></i>
+          <span> +1</span>
+        </h3>
+        <div>You earned 1 task completion point!</div>
+      </div>
+    );
+
+  const notifyScoredDown = () =>
+    toast.error(
+      <div>
+        <h3>
+          <i class="fas fa-trophy"></i>
+          <span> -1</span>
+        </h3>
+        <div>You lost 1 task completion point!</div>
+      </div>
+    );
+
+  // const notifyTaskDeleted = () =>
+  //   toast.error(
+  //     <div>
+  //       <h3>Task successfully deleted</h3>
+  //       <div>
+  //         Now it's done: Your task is gone -but don't you cry, young Padawan:
+  //         There's allways a new one!
+  //       </div>
+  //     </div>
+  //   );
 
   const notifyActiveTasksLimitReached = () =>
     toast.error(
@@ -72,7 +158,7 @@ function App() {
   const TASK_STATUS_PENDING = "PENDING"; // == TASKS BACKLOG
   const TASK_STATUS_ACTIVE = "ACTIVE"; // == TASKS IN PROGRESS
   const TASK_STATUS_DONE = "DONE";
-  const TASK_STATUS_TRASHED = "TRASHED";
+  const TASK_STATUS_ARCHIVED = "ARCHIVED";
 
   const seedTasks = [
     {
@@ -81,7 +167,7 @@ function App() {
       status: TASK_STATUS_PENDING,
       priority: 2,
       completedAt: null,
-      trashedAt: null,
+      archivedAt: null,
       activatedAt: null,
       inPlaceEditMode: false,
     },
@@ -91,7 +177,7 @@ function App() {
       status: TASK_STATUS_PENDING,
       priority: 3,
       completedAt: null,
-      trashedAt: null,
+      archivedAt: null,
       activatedAt: null,
       inPlaceEditMode: false,
     },
@@ -101,7 +187,7 @@ function App() {
       status: TASK_STATUS_PENDING,
       priority: 1,
       completedAt: null,
-      trashedAt: null,
+      archivedAt: null,
       activatedAt: null,
       inPlaceEditMode: false,
     },
@@ -111,7 +197,7 @@ function App() {
       status: TASK_STATUS_PENDING,
       priority: 1,
       completedAt: null,
-      trashedAt: null,
+      archivedAt: null,
       activatedAt: null,
       createdAt: +new Date(),
       inPlaceEditMode: false,
@@ -122,7 +208,7 @@ function App() {
       status: TASK_STATUS_PENDING,
       priority: 4,
       completedAt: null,
-      trashedAt: null,
+      archivedAt: null,
       createdAt: +new Date(),
       inPlaceEditMode: false,
     },
@@ -132,7 +218,7 @@ function App() {
       status: TASK_STATUS_ACTIVE,
       priority: 1,
       completedAt: null,
-      trashedAt: null,
+      archivedAt: null,
       createdAt: +new Date(),
       inPlaceEditMode: false,
     },
@@ -142,7 +228,7 @@ function App() {
       status: TASK_STATUS_ACTIVE,
       priority: 2,
       completedAt: null,
-      trashedAt: null,
+      archivedAt: null,
       createdAt: +new Date(),
       inPlaceEditMode: false,
     },
@@ -152,35 +238,37 @@ function App() {
       status: TASK_STATUS_DONE,
       priority: 2,
       completedAt: +new Date(),
-      trashedAt: null,
+      archivedAt: null,
       createdAt: +new Date(),
       inPlaceEditMode: false,
     },
     {
       id: uuidv4(),
       task: "Let's keep that one!",
-      status: TASK_STATUS_TRASHED,
+      status: TASK_STATUS_ARCHIVED,
       priority: 2,
       completedAt: +new Date(),
-      trashedAt: null,
+      archivedAt: null,
       createdAt: +new Date(),
       inPlaceEditMode: false,
     },
   ];
   const [tasks, setTasks] = useState(seedTasks);
   const [searchTerm, setSearchTerm] = useState("");
+  const [userScore, setuserScore] = useState(0);
+  // TODO: make those editable
   const [activeTasksLimit, setActiveTasksLimit] = useState(3);
   const [tasksBacklogLimit, setTasksBacklogLimit] = useState(6);
   const pendingTasks = scopedTaks(TASK_STATUS_PENDING);
   const activeTasks = scopedTaks(TASK_STATUS_ACTIVE);
   const completedTasks = scopedTaks(TASK_STATUS_DONE);
-  const trashedTasks = scopedTaks(TASK_STATUS_TRASHED);
+  const archivedTasks = scopedTaks(TASK_STATUS_ARCHIVED); // TODO: rename to archived
 
   // Render our pending, done and soft deleted tasks lists
   const todoListItemsPending = renderTaskItems(pendingTasks);
   const todoListItemsActive = renderTaskItems(activeTasks);
   const todoListItemsDone = renderTaskItems(completedTasks);
-  const todoListItemsTrashed = renderTaskItems(trashedTasks);
+  const todoListItemsArchived = renderTaskItems(archivedTasks); // TODO: Rename to archived
 
   // Scopes "tasks"-state using the provided status
   // and applying a potential filter value
@@ -215,8 +303,8 @@ function App() {
             <TodoListItem
               task={e}
               key={i}
-              onTrashClick={handleTaskTrashClick}
-              onUntrashClick={handleTaskUntrashClick}
+              onArchiveClick={handleTaskArchiveClick} // TODO: onArchiveClick
+              onDearchiveClick={handleTaskDearchiveClick} // TODO: On DeArchiveClick
               onToggleCompletedClick={handleTaskStatusCompletedToggleClick}
               onToggleActivatedClick={handleTaskActiveStatusToggleClick}
               onEditClick={handleTaskEditClick}
@@ -227,19 +315,22 @@ function App() {
     );
   }
 
+  //  TODO: Recconceptionalize to archive
   // Just soft delete the current task
-  function handleTaskTrashClick(currentTask) {
-    console.log("handleTaskTrashClick");
-    if (currentTask.status === TASK_STATUS_TRASHED) {
+  function handleTaskArchiveClick(currentTask) {
+    console.log("handleTaskArchiveClick");
+    if (currentTask.status === TASK_STATUS_ARCHIVED) {
       if (window.confirm("Kill for good?!")) {
         deleteTask(currentTask);
+        notifyTaskDeleted();
       }
     } else {
       setTasks(
         tasks.map((task) => {
           if (task.id === currentTask.id) {
-            task.status = TASK_STATUS_TRASHED;
-            task.trashedAt = +new Date();
+            task.status = TASK_STATUS_ARCHIVED;
+            task.archivedAt = +new Date();
+            notifyTaskArchived();
           }
 
           return task;
@@ -249,13 +340,14 @@ function App() {
   }
 
   // Just soft delete the current task
-  function handleTaskUntrashClick(currentTask) {
-    console.log("handleTaskUntrashClick");
+  function handleTaskDearchiveClick(currentTask) {
+    console.log("handleTaskDearchiveClick");
     setTasks(
       tasks.map((task) => {
         if (task.id === currentTask.id) {
           task.status = TASK_STATUS_PENDING;
-          task.trashedAt = null;
+          task.archivedAt = null;
+          notifyTaskDeArchived();
         }
 
         return task;
@@ -279,7 +371,7 @@ function App() {
 
   // TODO:
   // helper function
-  // Only for already trashed task:
+  // Only for already archived task:
   // Remove the current task for good
   function deleteTask(currentTask) {
     console.log("Delete task");
@@ -294,6 +386,7 @@ function App() {
   }
 
   // toggle the current tasks's status
+  // TODO: for real bro? Refactor this BS
   function handleTaskStatusCompletedToggleClick(currentTask) {
     console.log("handleTaskStatusCompletedToggleClick");
     setTasks(
@@ -303,21 +396,35 @@ function App() {
             task.status === TASK_STATUS_PENDING ||
             task.status === TASK_STATUS_DONE
           ) {
-            task.status =
-              task.status === TASK_STATUS_PENDING
-                ? TASK_STATUS_DONE
-                : TASK_STATUS_PENDING;
+            task.status === TASK_STATUS_PENDING
+              ? setTaskCompleted(task)
+              : resetTaskPending(task);
           } else if (task.status === TASK_STATUS_ACTIVE) {
-            task.status = TASK_STATUS_DONE;
+            setTaskCompleted(task);
           }
-          task.completedAt =
-            task.status === TASK_STATUS_DONE ? +new Date() : null;
-          task.completed ? notifyTaskCompleted() : notifyTaskReopened();
         }
 
         return task;
       })
     );
+  }
+
+  function setTaskCompleted(task) {
+    task.status = TASK_STATUS_DONE;
+    task.completedAt = +new Date();
+    notifyTaskCompleted();
+    notifyScoredUp();
+    setuserScore(userScore + 1);
+    return task;
+  }
+
+  function resetTaskPending(task) {
+    task.status = TASK_STATUS_PENDING;
+    task.completedAt = null;
+    setuserScore(userScore - 1);
+    notifyTaskReopened();
+    notifyScoredDown();
+    return task;
   }
 
   // toggle the current tasks's status between pending <-> active
@@ -344,6 +451,9 @@ function App() {
               : TASK_STATUS_PENDING;
           task.activatedAt =
             task.status === TASK_STATUS_ACTIVE ? +new Date() : null;
+          task.status === TASK_STATUS_ACTIVE
+            ? notifyTaskActivated()
+            : notifyTaskReBacklogged();
         }
 
         return task;
@@ -392,7 +502,7 @@ function App() {
         status: TASK_STATUS_PENDING,
         createdAt: +new Date(),
         completedAt: null,
-        trashedAt: null,
+        archivedAt: null,
         activatedAt: null,
         inPlaceEditMode: false,
       },
@@ -405,6 +515,21 @@ function App() {
     setSearchTerm(event.target.value.toLowerCase());
   }
 
+  /* useEffect experiments*/
+  // function VisitsCounter() {
+  //   const [visits, setVisits] = useState(0);
+
+  //   useEffect(() => {
+  //     setVisits(Number(localStorage.getItem("visitsCounter") || 0) + 1);
+  //   }, []);
+
+  //   useEffect(() => {
+  //     localStorage.setItem("visitsCounter", visits);
+  //   }, [visits]);
+
+  //   return <p>{visits}</p>;
+  // }
+
   return (
     <div className="App">
       <header>
@@ -414,7 +539,6 @@ function App() {
             type="text"
             placeholder="What needs to get done?!"
           />
-
           <select defaultValue="" name="taskPriority" id="taskPriority">
             <option value="1">High Priority</option>
             <option value="2">Medium Priority</option>
@@ -424,7 +548,6 @@ function App() {
               Priority?
             </option>
           </select>
-
           <button type="submit">Add</button>
         </form>
         <h1>
@@ -437,6 +560,10 @@ function App() {
           placeholder="What are you looking for?"
           onChange={handleLiveSearch}
         />
+        <div className="userScoreWrapper">
+          <i class="fas fa-trophy"></i>
+          <span>{userScore}</span>
+        </div>
       </header>
       <main>
         <div className="TasksTile TasksTile--pending">
@@ -469,14 +596,14 @@ function App() {
             {todoListItemsDone}
           </ul>
         </div>
-        <div className="TasksTile TasksTile--trashed">
+        <div className="TasksTile TasksTile--archived">
           <ul>
             <TodoListHeader
               caption="Archived Tasks"
-              iconClass="fas fa-trash-alt"
-              count={trashedTasks.length}
+              iconClass="fas fa-box"
+              count={archivedTasks.length}
             />
-            {todoListItemsTrashed}
+            {todoListItemsArchived}
           </ul>
         </div>
       </main>
